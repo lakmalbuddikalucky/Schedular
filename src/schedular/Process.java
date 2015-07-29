@@ -3,6 +3,16 @@ package schedular;
  *
  * @author 130372T
  */
+
+
+/**
+ * This class is for creating process objects
+ * A process has,    -Process ID
+ *                   -Arrival Time
+ *                   -Service Time
+ *                   -Completed State
+ *                   -Process Name
+ */
 public class Process {
         private int ID;
 	private int arrivalTime;

@@ -1,6 +1,5 @@
 package schedular;
 import Interfaces.MainWindow;
-import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 
@@ -8,15 +7,25 @@ import javax.swing.JTextField;
  *
  * @author 130372T
  */
+
+/**
+ * This class is for creating schedulers
+ */
 public class Schedular extends Thread{
+        //initially creates 5 new processes
         Process p1,p2,p3,p4,p5;
+        
+        //the output list of processes which will be sorted according to the time they begin to execute
         Process[] output = new Process[5];
+        
+        //the list of processes waiting to be executed at a given time
         List waitingList = new List();
         int index=0;
         int index2=0;
         int prevTime=0;
         boolean reA=false,reB=false,reC=false,reD=false,reE=false;
         
+        //this method execute the scheduler and output a list of processes sorted according to the time they begin to execute
         public void runQueue(int time,JButton q1,JButton q2,JButton q3, JButton q4, JButton q5,JTextField t1,JTextField t2,JTextField t3,JTextField t4,JTextField t5){
             JButton[] buttonList = new JButton[5];
             buttonList[0] = q1;
@@ -89,8 +98,11 @@ public class Schedular extends Thread{
             }
         }
         
+        //run method of the sceduler
 	public Process[] run(JButton q1,JButton q2,JButton q3, JButton q4, JButton q5,JTextField t1,JTextField t2,JTextField t3,JTextField t4,JTextField t5,JTextField s1,JTextField s2,JTextField s3,JTextField s4,JTextField s5){
-		Process[] processList = new Process[5];
+		//create an array of processes
+                //there can be any number of processes but here it is hard coded to 5 processes
+                Process[] processList = new Process[5];
 		
                 p1 = new Process("A",0);
 		processList[0] = p1;
@@ -137,17 +149,23 @@ public class Schedular extends Thread{
 		
                 
                 
-                
+                //runs a loop until all the processes finish executing
 		while(!finished){ 
 			for(int i = lastArrivedProcessID + 1; i < 5; i++){
-				if(processList[i].getArrivalTime() <= time){
+                            //check whether new processes have arrived
+                            //if (yes) --> the new processes will be added to the proper location of the waiting queue
+                            //if (no)  --> break the for loop
+				
+                            if(processList[i].getArrivalTime() <= time){
 					Node currentNode = waitingList.getHead();
 					Node prevNode = null;
 					while(true){
+                                                //checking whether the current node is null
 						if(currentNode == null){
 							waitingList.add(processList[i]);
 							break;
 						}else if( ((Process)currentNode.getData()).getServiceTime() > processList[i].getServiceTime() ){
+                                                        //this is checked in order to make the queue in order
 							Node newNode = new Node(processList[i]);
 							if(prevNode != null){
 								prevNode.setNext(newNode);
@@ -168,6 +186,13 @@ public class Schedular extends Thread{
 				}
 				lastArrivedProcessID++;
 			}
+                        //check whether the waiting list is empty
+                        //if (yes) --> no new processes have arrived so add +1 to time
+                        //if (no)  --> take the head of the waiting list of processes
+                        //             add it to the output list
+                        //             add the service time of that process to time
+                        //             remove that process from the waiting list
+			
 			if(waitingList.getSize() == 0){
 				time ++;
                                 
@@ -185,6 +210,7 @@ public class Schedular extends Thread{
                         
 		}
                 
+                //return the output process list
                 return output;
 	}
 }
